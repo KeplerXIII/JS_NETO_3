@@ -51,48 +51,48 @@ export class GoodsList {
     }
   }
 
-  export class BasketGood extends Good {
-    constructor(good, amount) {
-      super(good.id, good.name, good.description, good.sizes, good.price, good.available);
-      this.amount = amount;
-    }
-  }
+export class BasketGood extends Good {
+constructor(good, amount) {
+    super(good.id, good.name, good.description, good.sizes, good.price, good.available);
+    this.amount = amount;
+}
+}
 
-  export class Basket {
-    #goods = [];
-  
-    get totalAmount() {
-      return this.#goods.reduce((total, good) => total + good.amount, 0);
+export class Basket {
+#goods = [];
+
+get totalAmount() {
+    return this.#goods.reduce((total, good) => total + good.amount, 0);
+}
+
+get totalSum() {
+    return this.#goods.reduce((total, good) => total + good.amount * good.price, 0);
+}
+
+add(good, amount) {
+    const basketGood = this.#goods.find((basketGood) => basketGood.id === good.id);
+    if (basketGood) {
+    basketGood.amount += amount;
+    } else {
+    this.#goods.push(new BasketGood(good, amount));
     }
-  
-    get totalSum() {
-      return this.#goods.reduce((total, good) => total + good.amount * good.price, 0);
+}
+
+remove(good, amount) {
+    const basketGood = this.#goods.find((basketGood) => basketGood.id === good.id);
+    if (basketGood) {
+    basketGood.amount -= amount;
+    if (basketGood.amount <= 0) {
+        this.#goods.splice(this.#goods.indexOf(basketGood), 1);
     }
-  
-    add(good, amount) {
-      const basketGood = this.#goods.find((basketGood) => basketGood.id === good.id);
-      if (basketGood) {
-        basketGood.amount += amount;
-      } else {
-        this.#goods.push(new BasketGood(good, amount));
-      }
     }
-  
-    remove(good, amount) {
-      const basketGood = this.#goods.find((basketGood) => basketGood.id === good.id);
-      if (basketGood) {
-        basketGood.amount -= amount;
-        if (basketGood.amount <= 0) {
-          this.#goods.splice(this.#goods.indexOf(basketGood), 1);
-        }
-      }
-    }
-  
-    clear() {
-      this.#goods = [];
-    }
-  
-    removeUnavailable() {
-      this.#goods = this.#goods.filter((basketGood) => basketGood.available);
-    }
-  }
+}
+
+clear() {
+    this.#goods = [];
+}
+
+removeUnavailable() {
+    this.#goods = this.#goods.filter((basketGood) => basketGood.available);
+}
+}
